@@ -2,37 +2,40 @@
 # -*- coding: utf-8 -*-
 from scapy.all import *
 import math
+from collections import Counter
 
-class Simbolo:
-    """Símbolo y su probabilidad"""
-    def __init__(self, nombre, prob):
-        self.nombre = nombre
-        self.prob = prob
+# Fuente S que distingue según tipo
+S = []
 
-class Fuente:
-    """Fuente que contiene una cadena de simbolos"""
-    def __init__(self, simbolos):
-        self.simbolos = simbolos
+# Agrega símbolos a medida que se sniffean.
+# La fuente S que distingue tipos
+def add_symbol_to_S(pkt):
+    global S
+    S.append(pkt[Ether].type)
 
-    def entropia(self):
-        """calcula entropia de la fuente"""
-        entropia = 0
-        for s in self.simbolos:
-            entropia -= s.prob * math.log(s.prob, 12)
-        return entropia
+# Calcula la entropia de una fuente dada como una lista de simbolos
+def entropy(source):
+    entropy = 0.0
+    # dict con ocurrencias de los símbolos en la fuente
+    # {"s_0": ocurs_s_0, ..."s_i": occurs_s_i}
+    occurs = Counter(source)
+    size = len(source)
+    for s in occurs:
+        prob = float(occurs[s])/float(size)
+        entropy -= prob * math.log(prob, 2)
+    return entropy
 
-def apariciones_psrc(sniff_data, psrc):
-    count = 0
-    for d in sniff_data:
-        if d.psrc == psrc:
-            count +=1
-    return count
+# Muestra datos ether
+def show_ether(pkt):
+    print pkt[Ether].src, pkt[Ether].dst, pkt[Ether].type
 
-simbolos = []
-sniff_data = sniff(filter="arp", timeout=2)
-for d in sniff_data:
-    nuevo_simbolo = Simbolo(d.psrc, apariciones_psrc(sniff_data,d.psrc)/len(sniff_data))
-    simbolos.append(nuevo_simbolo)
+# Función que sniffea red local
+def sniff_local(callback_function, intervalo=5):
+    """ Escucha pasivamente la red local y procesa los datos en
+    la función callback pasada como parámetro durante el intervalo
+    de t tiempo en segundos"""
+    sniff(prn=callback_function, store=0, timeout=intervalo)
 
-fuente = Fuente(simbolos)
-print fuente.entropia()
+if __name__ == '__main__':
+    sniff_local(add_symbol_to_S)
+    print entropy(S)
