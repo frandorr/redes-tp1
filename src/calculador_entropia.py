@@ -44,13 +44,13 @@ def add_symbol_to_S(pkt):
         if ARP in pkt:
             cantidadPaquetesARP = cantidadPaquetesARP + 1
             if (iptype.count(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst)) == 0):
-                archivo = open(carpeta + '/IPtype.txt', 'a')
-                archivo.write(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst) + ";\n")
+                archivo = open(carpeta + '/IPtype.dot', 'a')
+                archivo.write("\t\""+str(pkt[Ether].psrc) +"\""+ " -> "+"\"" + str(pkt[Ether].pdst) +"\""+ ";\n")
                 iptype.append(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst))
                 archivo.close()
         if (mactype.count(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst)) == 0):
-            archivo = open(carpeta + '/MACtype.txt', 'a')
-            archivo.write(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst) + ";\n")
+            archivo = open(carpeta + '/MACtype.dot', 'a')
+            archivo.write("\t\""+ str(pkt[Ether].src) +"\""+ " -> " + "\""+str(pkt[Ether].dst) +"\""+ ";\n")
             mactype.append(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst))
             archivo.close()
 #            print "es ARP"
@@ -98,14 +98,14 @@ def add_symbol_to_host(pkt):
         archivo.close()
 
         if(macnodos.count(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst)) == 0):
-            archivo = open(carpeta + '/MACnodos.txt', 'a')
-            archivo.write(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst) + ";\n")
+            archivo = open(carpeta + '/MACnodos.dot', 'a')
+            archivo.write("\t\""+str(pkt[Ether].src) +"\""+ " -> " +"\""+ str(pkt[Ether].dst) +"\""+ ";\n")
             macnodos.append(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst))
             archivo.close()
 
         if(ipnodos.count(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst)) == 0):
-            archivo = open(carpeta + '/IPnodos.txt', 'a')
-            archivo.write(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst) + ";\n")
+            archivo = open(carpeta + '/IPnodos.dot', 'a')
+            archivo.write("\t\""+str(pkt[Ether].psrc) +"\""+ " -> " +"\""+ str(pkt[Ether].pdst) +"\""+ ";\n")
             ipnodos.append(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst))
             archivo.close()
 
@@ -289,6 +289,33 @@ def graficar(carpeta):
 def show_ether(pkt):
     print pkt[Ether].src, pkt[Ether].dst, pkt[Ether].type
 
+def prepararArchivoDot(carpeta, subcarpeta):
+    archivo = open(carpeta + subcarpeta, 'a')
+    archivo.write("digraph world {"+ "\n")
+    archivo.write("size=\"7,7\";\n")
+    archivo.close()
+    return
+
+def prepararArchivosDot(carpeta):
+    prepararArchivoDot(carpeta,'/IPtype.dot')
+    prepararArchivoDot(carpeta,'/MACtype.dot')
+    prepararArchivoDot(carpeta,'/MACnodos.dot')
+    prepararArchivoDot(carpeta,'/IPnodos.dot')
+    return
+
+def terminarArchivoDot(carpeta, subcarpeta):
+    archivo = open(carpeta + subcarpeta, 'a')
+    archivo.write("}\n")
+    archivo.close()
+    return
+
+def terminarArchivosDot(carpeta):
+    terminarArchivoDot(carpeta,'/IPtype.dot')
+    terminarArchivoDot(carpeta,'/MACtype.dot')
+    terminarArchivoDot(carpeta,'/MACnodos.dot')
+    terminarArchivoDot(carpeta,'/IPnodos.dot')
+    return
+
 # Función que sniffea red local
 def sniff_local(callback_function,bloqueado, intervalo):
     """ Escucha pasivamente la red local y procesa los datos en
@@ -307,6 +334,11 @@ if __name__ == '__main__':
         carpeta = "./experimento" + str(i)
         shutil.rmtree(carpeta, ignore_errors=True)
         os.makedirs(carpeta)
+
+
+        prepararArchivosDot(carpeta)
+
+
         sniff_local(add_symbol_to_S,True,intervalo)
         print "paquetes ARP " + str(cantidadPaquetesARP)
         print "paquetes " + str(cantidadPaquetes)
@@ -372,6 +404,7 @@ if __name__ == '__main__':
         mostrarOcurrenciasYCantidades(ListaIPDst, "IP Dst",carpeta)
         mostrarSimboloYProbabilidad(ListaIPDst,"IP Dst",carpeta)
 
+        terminarArchivosDot(carpeta)
         i = i + 1
 
         graficar(carpeta)
