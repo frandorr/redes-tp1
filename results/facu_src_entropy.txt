@@ -1,4 +1,4 @@
-MACsrc, ip_src, ip_dst, op, entropia_src, entropia_dst, cant_pkt_arp, cant_pkt_total
+MACsrc,ip_src,ip_dst,op,entropia_src,entropia_dst,cant_pkt_arp,cant_pkt_total
 00:1b:21:7f:6c:fd,10.2.7.254,10.2.7.22,1,0.0,0.0,1,1
 00:1b:21:7f:6c:fd,10.2.0.254,10.2.0.205,1,1.0,1.0,2,9
 a8:06:00:10:71:8e,10.2.203.25,10.2.203.254,1,1.58496250072,1.58496250072,3,12
