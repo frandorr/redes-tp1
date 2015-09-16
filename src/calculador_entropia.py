@@ -23,6 +23,13 @@ entropiaIPSrc = []
 
 cantidadPaquetesARP = 0
 cantidadPaquetes = 0
+
+iptype = []
+mactype = []
+
+ipnodos = []
+macnodos = []
+
 # Agrega símbolos a medida que se sniffean.
 # La fuente S que distingue tipos
 def add_symbol_to_S(pkt):
@@ -36,6 +43,16 @@ def add_symbol_to_S(pkt):
         S.append(pkt[Ether].type)
         if ARP in pkt:
             cantidadPaquetesARP = cantidadPaquetesARP + 1
+            if (iptype.count(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst)) == 0):
+                archivo = open(carpeta + '/IPtype.txt', 'a')
+                archivo.write(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst) + ";\n")
+                iptype.append(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst))
+                archivo.close()
+        if (mactype.count(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst)) == 0):
+            archivo = open(carpeta + '/MACtype.txt', 'a')
+            archivo.write(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst) + ";\n")
+            mactype.append(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst))
+            archivo.close()
 #            print "es ARP"
         cantidadPaquetes = cantidadPaquetes + 1
 #    else:
@@ -79,6 +96,18 @@ def add_symbol_to_host(pkt):
         archivo.write(str(entropy(ListaIPDst)) + "\n")
         entropiaIPDst.append(entropy(ListaIPDst))
         archivo.close()
+
+        if(macnodos.count(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst)) == 0):
+            archivo = open(carpeta + '/MACnodos.txt', 'a')
+            archivo.write(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst) + ";\n")
+            macnodos.append(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst))
+            archivo.close()
+
+        if(ipnodos.count(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst)) == 0):
+            archivo = open(carpeta + '/IPnodos.txt', 'a')
+            archivo.write(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst) + ";\n")
+            ipnodos.append(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst))
+            archivo.close()
 
 #    pkt.show()
 #    print "un arp!!!" 
@@ -226,7 +255,7 @@ def graficarEntropiaDstVsSrc(dst,src,stringdst,stringsrc,carpeta):
     plt.xlabel('Cantidad')
     plt.ylabel('Entropia')
     fig1 = plt.gcf()
-    plt.show()
+#    plt.show()
     plt.savefig(carpeta+"/entropia"+stringdst+"y"+stringsrc+".png")
     return
 def graficarUnaEntropia(data,string,carpeta):
@@ -240,7 +269,7 @@ def graficarUnaEntropia(data,string,carpeta):
     plt.xlabel('Cantidad')
     plt.ylabel('Entropia')
     fig1 = plt.gcf()
-    plt.show()
+#    plt.show()
     plt.savefig(carpeta+"/entropia"+string+".png")
 
     return
