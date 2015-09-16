@@ -3,6 +3,7 @@
 from scapy.all import *
 import math
 import sys
+import shutil
 from collections import Counter
 
 # Fuente S que distingue según tipo
@@ -30,6 +31,10 @@ def add_symbol_to_S(pkt):
         cantidadPaquetes = cantidadPaquetes + 1
 #    else:
 #        print "No es ARP"
+    archivo = open(carpeta + '/entropiaContinuaType.txt', 'a')
+    archivo.write(str(entropy(S)) + "\n")
+    archivo.close()
+
 def add_symbol_to_host(pkt):
     global ListaSrc
     global ListaDst
@@ -44,6 +49,22 @@ def add_symbol_to_host(pkt):
 
         ListaIPSrc.append(pkt[Ether].psrc) #IP src
         ListaIPDst.append(pkt[Ether].pdst) #IP dst
+
+        archivo = open(carpeta + '/entropiaContinuaMACsrc.txt', 'a')
+        archivo.write(str(entropy(ListaMacSrc)) + "\n")
+        archivo.close()
+
+        archivo = open(carpeta + '/entropiaContinuaMACdst.txt', 'a')
+        archivo.write(str(entropy(ListaMacDst)) + "\n")
+        archivo.close()
+
+        archivo = open(carpeta + '/entropiaContinuaIPsrc.txt', 'a')
+        archivo.write(str(entropy(ListaIPSrc)) + "\n")
+        archivo.close()
+
+        archivo = open(carpeta + '/entropiaContinuaIPdst.txt', 'a')
+        archivo.write(str(entropy(ListaIPDst)) + "\n")
+        archivo.close()
 
 #    pkt.show()
 #    print "un arp!!!" 
@@ -113,6 +134,7 @@ if __name__ == '__main__':
     i = 0
     while (i<veces):
         carpeta = "./experimento" + str(i)
+        shutil.rmtree(carpeta, ignore_errors=True)
         os.makedirs(carpeta)
         sniff_local(add_symbol_to_S,True,intervalo)
         print "paquetes ARP " + str(cantidadPaquetesARP)
