@@ -5,6 +5,8 @@ import math
 import sys
 import shutil
 from collections import Counter
+import numpy as np
+import matplotlib.pyplot as plt
 
 # Fuente S que distingue según tipo
 S = []
@@ -12,6 +14,13 @@ ListaMacDst = []
 ListaMacSrc = []
 ListaIPDst = []
 ListaIPSrc = []
+
+entropiaS = []
+entropiaMacDst = []
+entropiaMacSrc = []
+entropiaIPDst = []
+entropiaIPSrc = []
+
 cantidadPaquetesARP = 0
 cantidadPaquetes = 0
 # Agrega símbolos a medida que se sniffean.
@@ -33,6 +42,7 @@ def add_symbol_to_S(pkt):
 #        print "No es ARP"
     archivo = open(carpeta + '/entropiaContinuaType.txt', 'a')
     archivo.write(str(entropy(S)) + "\n")
+    entropiaS.append(entropy(S))
     archivo.close()
 
 def add_symbol_to_host(pkt):
@@ -52,18 +62,22 @@ def add_symbol_to_host(pkt):
 
         archivo = open(carpeta + '/entropiaContinuaMACsrc.txt', 'a')
         archivo.write(str(entropy(ListaMacSrc)) + "\n")
+        entropiaMacSrc.append(entropy(ListaMacSrc))
         archivo.close()
 
         archivo = open(carpeta + '/entropiaContinuaMACdst.txt', 'a')
         archivo.write(str(entropy(ListaMacDst)) + "\n")
+        entropiaMacDst.append(entropy(ListaMacDst))
         archivo.close()
 
         archivo = open(carpeta + '/entropiaContinuaIPsrc.txt', 'a')
         archivo.write(str(entropy(ListaIPSrc)) + "\n")
+        entropiaIPSrc.append(entropy(ListaIPSrc))
         archivo.close()
 
         archivo = open(carpeta + '/entropiaContinuaIPdst.txt', 'a')
         archivo.write(str(entropy(ListaIPDst)) + "\n")
+        entropiaIPDst.append(entropy(ListaIPDst))
         archivo.close()
 
 #    pkt.show()
@@ -114,6 +128,95 @@ def entropy(source):
         entropy -= prob * math.log(prob, 2)
     return entropy
 
+def graficarCantidad(source,stringMostrar,carpeta):
+    print "graficar cantidad"
+    occurs = Counter(source)
+    N = len(occurs)
+    ind = np.arange(N)
+    cantidades = []
+    xlabels = []
+    for s in occurs:
+#        print str(stringMostrar) + " "+ str(s) + " con " + str(occurs[s])
+        cantidades.append(occurs[s])
+        xlabels.append(s)
+    print cantidades
+    width = 0.25 
+    fig, ax = plt.subplots()
+    rect1 = ax.bar(ind, cantidades, width, color='r')
+    ax.set_ylabel('Cantidades')
+    ax.set_xlabel(stringMostrar)
+    ax.set_title("Cantidades por " + stringMostrar)
+    ax.set_xticks(ind+width)
+    ax.set_xticklabels(xlabels)
+
+    def autolabel(rects):
+    # attach some text labels
+        for rect in rects:
+            height = rect.get_height()
+            ax.text(rect.get_x()+rect.get_width()/2., 1.05*height, '%d'%int(height),ha='center', va='bottom')
+
+    autolabel(rect1)
+
+#    plt.show()
+    plt.savefig(carpeta+"/cantidad"+stringMostrar+".png")
+    return
+
+def graficarProbabilidad(source,stringMostrar,carpeta):
+    print "graficar probabilidad"
+
+    occurs = Counter(source)
+    N = len(occurs)
+    size = len(source)
+    probs = []
+    ind = np.arange(N)
+    xlabels = []
+    for s in occurs:
+        prob = float(occurs[s])/float(size)
+#        print str(stringMostrar) + " "+ str(s) + " con probabilidad " + str(prob)
+        probs.append(prob)
+        xlabels.append(s)
+    print probs
+    width = 0.25 
+    fig, ax = plt.subplots()
+    rect1 = ax.bar(ind, probs, width, color='r')
+    ax.set_ylabel('Probabilidades')
+    ax.set_ylim((0,1))
+    ax.set_xlabel(stringMostrar)
+    ax.set_title("Probabilidades por " + stringMostrar)
+    ax.set_xticks(ind+width)
+    ax.set_xticklabels(xlabels)
+
+    def autolabel(rects):
+    # attach some text labels
+        for rect in rects:
+            height = rect.get_height()
+            ax.text(rect.get_x()+rect.get_width()/2., 1.05*height, '%f'%float(height),ha='center', va='bottom')
+
+    autolabel(rect1)
+
+#    plt.show()
+    plt.savefig(carpeta+"/probabilidad"+stringMostrar+".png")
+    return
+def graficarCantidades(carpeta):
+    graficarCantidad(S,"Protocolo",carpeta)
+    graficarCantidad(ListaMacSrc,"Mac Source",carpeta)
+    graficarCantidad(ListaMacDst,"Mac Dst",carpeta)
+    graficarCantidad(ListaIPSrc,"IP Source",carpeta)
+    graficarCantidad(ListaIPDst,"IP Dst",carpeta)
+    return
+
+def graficarProbabilidades(carpeta):
+    graficarProbabilidad(S,"Protocolo",carpeta)
+    graficarProbabilidad(ListaMacSrc,"Mac Source",carpeta)
+    graficarProbabilidad(ListaMacDst,"Mac Dst",carpeta)
+    graficarProbabilidad(ListaIPSrc,"IP Source",carpeta)
+    graficarProbabilidad(ListaIPDst,"IP Dst",carpeta)
+    return
+
+def graficar(carpeta):
+#    graficarCantidades(carpeta)
+    graficarProbabilidades(carpeta)
+    return
 # Muestra datos ether
 def show_ether(pkt):
     print pkt[Ether].src, pkt[Ether].dst, pkt[Ether].type
@@ -202,3 +305,15 @@ if __name__ == '__main__':
         mostrarSimboloYProbabilidad(ListaIPDst,"IP Dst",carpeta)
 
         i = i + 1
+
+        graficar(carpeta)
+
+        #no deberia borrar todas las variables globales aca?
+        S = []
+        ListaMacDst = []
+        ListaMacSrc = []
+        ListaIPDst = []
+        ListaIPSrc = []
+        cantidadPaquetesARP = 0
+        cantidadPaquetes = 0
+
