@@ -7,6 +7,9 @@ from collections import Counter
 # Fuente S que distingue según tipo
 S = []
 Ssrc = []
+Sdst = []
+cant_pkt = 0
+cant_arp = 0
 # Agrega símbolos a medida que se sniffean.
 # La fuente S que distingue tipos
 def add_symbol_to_S(pkt):
@@ -15,9 +18,17 @@ def add_symbol_to_S(pkt):
 
 def add_symbol_to_Ssrc(pkt):
     global Ssrc
+    global Sdst
+    global cant_pkt
+    global cant_arp
+    cant_pkt+=1
     if ARP in pkt and pkt[ARP].op in (1,2):
+        cant_arp+=1
         Ssrc.append(pkt[ARP].psrc)
-        print pkt[ARP].hwsrc,",", pkt[ARP].psrc,",", pkt[ARP].pdst,",", entropy(Ssrc)
+        Sdst.append(pkt[ARP].pdst)
+        res = str(pkt[ARP].hwsrc)+","+ str(pkt[ARP].psrc)+","+ str(pkt[ARP].pdst)+","+ str(pkt[ARP].op)+","+ str(entropy(Ssrc))+","+ str(entropy(Sdst))+ "," + str(cant_arp)+ "," +str(cant_pkt)+"\n"
+        with open('facu_src_entropy.txt', 'a') as f:
+            f.write(res)
 # Calcula la entropia de una fuente dada como una lista de simbolos
 def entropy(source):
     entropy = 0.0
@@ -42,5 +53,5 @@ def sniff_local(callback_function, intervalo=5, filtro=""):
     sniff(prn=callback_function, store=0, timeout=intervalo, filter=filtro)
 
 if __name__ == '__main__':
-    sniff_local(add_symbol_to_Ssrc, intervalo=200, filtro="arp")
-    print entropy(S)
+    sniff_local(add_symbol_to_Ssrc, intervalo=900, filtro="")
+    print cant_pkt, cant_arp
