@@ -213,9 +213,48 @@ def graficarProbabilidades(carpeta):
     graficarProbabilidad(ListaIPDst,"IP Dst",carpeta)
     return
 
+
+def graficarEntropiaDstVsSrc(dst,src,stringdst,stringsrc,carpeta):
+    #print alfak
+    tam = len(dst)
+    xs = np.arange(0, tam,1)
+    plt.plot(xs, src,label=stringsrc)
+    plt.plot(xs, dst,label=stringdst)
+
+    plt.title("Comparar la entropia de las fuentes a medida que crece la cantidad")
+    plt.legend(loc='lower right')
+    plt.xlabel('Cantidad')
+    plt.ylabel('Entropia')
+    fig1 = plt.gcf()
+    plt.show()
+    plt.savefig(carpeta+"/entropia"+stringdst+"y"+stringsrc+".png")
+    return
+def graficarUnaEntropia(data,string,carpeta):
+    #print alfak
+    tam = len(data)
+    xs = np.arange(0, tam,1)
+    plt.plot(xs, data,label=string)
+
+    plt.title("Entropia en funcion de la cantidad")
+    plt.legend(loc='lower right')
+    plt.xlabel('Cantidad')
+    plt.ylabel('Entropia')
+    fig1 = plt.gcf()
+    plt.show()
+    plt.savefig(carpeta+"/entropia"+string+".png")
+
+    return
+
+def graficarEntropias(carpeta):
+    graficarUnaEntropia(entropiaS,"Protocolo",carpeta)
+    graficarEntropiaDstVsSrc(entropiaIPDst,entropiaIPSrc,"IP Dst","IP Source",carpeta)
+    graficarEntropiaDstVsSrc(entropiaMacDst,entropiaMacSrc,"Mac Dst","Mac Source",carpeta)
+    return
+
 def graficar(carpeta):
 #    graficarCantidades(carpeta)
-    graficarProbabilidades(carpeta)
+ #   graficarProbabilidades(carpeta)
+    graficarEntropias(carpeta)
     return
 # Muestra datos ether
 def show_ether(pkt):
