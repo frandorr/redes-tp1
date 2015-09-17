@@ -30,6 +30,12 @@ mactype = []
 ipnodos = []
 macnodos = []
 
+
+iptypeRepetidos = []
+mactypeRepetidos = []
+
+ipnodosRepetidos = []
+macnodosRepetidos = []
 # Agrega símbolos a medida que se sniffean.
 # La fuente S que distingue tipos
 def add_symbol_to_S(pkt):
@@ -48,11 +54,14 @@ def add_symbol_to_S(pkt):
                 archivo.write("\t\""+str(pkt[Ether].psrc) +"\""+ " -> "+"\"" + str(pkt[Ether].pdst) +"\""+ ";\n")
                 iptype.append(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst))
                 archivo.close()
+            iptypeRepetidos.append("\t\""+str(pkt[Ether].psrc) +"\""+ " -> "+"\"" + str(pkt[Ether].pdst) +"\""+ ";\n")                
         if (mactype.count(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst)) == 0):
             archivo = open(carpeta + '/MACtype.dot', 'a')
             archivo.write("\t\""+ str(pkt[Ether].src) +"\""+ " -> " + "\""+str(pkt[Ether].dst) +"\""+ ";\n")
             mactype.append(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst))
             archivo.close()
+        mactypeRepetidos.append("\t\""+ str(pkt[Ether].src) +"\""+ " -> " + "\""+str(pkt[Ether].dst) +"\""+ ";\n")
+
 #            print "es ARP"
         cantidadPaquetes = cantidadPaquetes + 1
 #    else:
@@ -102,12 +111,15 @@ def add_symbol_to_host(pkt):
                 archivo.write("\t\""+str(pkt[Ether].src) +"\""+ " -> " +"\""+ str(pkt[Ether].dst) +"\""+ ";\n")
                 macnodos.append(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst))
                 archivo.close()
+            macnodosRepetidos.append("\t\""+str(pkt[Ether].src) +"\""+ " -> " +"\""+ str(pkt[Ether].dst) +"\""+ ";\n")
 
             if(ipnodos.count(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst)) == 0):
                 archivo = open(carpeta + '/IPnodos.dot', 'a')
                 archivo.write("\t\""+str(pkt[Ether].psrc) +"\""+ " -> " +"\""+ str(pkt[Ether].pdst) +"\""+ ";\n")
                 ipnodos.append(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst))
                 archivo.close()
+            ipnodosRepetidos.append("\t\""+str(pkt[Ether].psrc) +"\""+ " -> " +"\""+ str(pkt[Ether].pdst) +"\""+ ";\n")
+
  #           print "who-has"
 #        else:
 #            print "is-at"
@@ -120,6 +132,9 @@ def add_symbol_to_host(pkt):
 #Muestra simbolo y probabilidad
 def mostrarSimboloYProbabilidad(source,stringMostrar,carpeta):
     occurs = Counter(source)
+    largo = len(source)
+    # filtro los que aparecen menos de 30
+    occurs = {k: (float(v)/float(largo)) for k, v in occurs.iteritems() if v >= 30}
     size = len(source)
     probs = []
 
@@ -142,7 +157,9 @@ def mostrarSimboloYProbabilidad(source,stringMostrar,carpeta):
 # Muestra la cantidad de cada uno con su nombre
 def mostrarOcurrenciasYCantidades(source, stringMostrar,carpeta):
     occurs = Counter(source)
-
+    largo = len(source)
+        # filtro los que aparecen menos de 30
+    occurs = {k: (float(v)/float(largo)) for k, v in occurs.iteritems() if v >= 30}
     archivo = open(carpeta + '/'+stringMostrar+'cantidades.txt', 'w')
 
     for s in occurs:
@@ -162,9 +179,12 @@ def entropy(source):
         entropy -= prob * math.log(prob, 2)
     return entropy
 
-def graficarCantidad(source,stringMostrar,carpeta):
-    print "graficar cantidad"
+def graficarCantidad(source,stringMostrar,carpeta,filtro):
+#    print "graficar cantidad"
     occurs = Counter(source)
+    largo = len(source)
+    # filtro los que aparecen menos de 30
+    occurs = {k: (float(v)/float(largo)) for k, v in occurs.iteritems() if v >= int(filtro)}
     N = len(occurs)
     ind = np.arange(N)
     cantidades = []
@@ -192,13 +212,16 @@ def graficarCantidad(source,stringMostrar,carpeta):
     autolabel(rect1)
 
 #    plt.show()
-    plt.savefig(carpeta+"/cantidad"+stringMostrar+".png")
+    plt.savefig(carpeta+"/cantidad"+stringMostrar+str(filtro)+".png")
     return
 
-def graficarProbabilidad(source,stringMostrar,carpeta):
-    print "graficar probabilidad"
+def graficarProbabilidad(source,stringMostrar,carpeta,filtro):
+#    print "graficar probabilidad"
 
     occurs = Counter(source)
+    largo = len(source)
+    # filtro los que aparecen menos de 30
+    occurs = {k: (float(v)/float(largo)) for k, v in occurs.iteritems() if v >= int(filtro)}
     N = len(occurs)
     size = len(source)
     probs = []
@@ -209,7 +232,7 @@ def graficarProbabilidad(source,stringMostrar,carpeta):
 #        print str(stringMostrar) + " "+ str(s) + " con probabilidad " + str(prob)
         probs.append(prob)
         xlabels.append(s)
-    print probs
+#    print probs
     width = 0.25 
     fig, ax = plt.subplots()
     rect1 = ax.bar(ind, probs, width, color='r')
@@ -229,22 +252,22 @@ def graficarProbabilidad(source,stringMostrar,carpeta):
     autolabel(rect1)
 
 #    plt.show()
-    plt.savefig(carpeta+"/probabilidad"+stringMostrar+".png")
+    plt.savefig(carpeta+"/probabilidad"+stringMostrar+ str(filtro)+".png")
     return
-def graficarCantidades(carpeta):
-    graficarCantidad(S,"Protocolo",carpeta)
-    graficarCantidad(ListaMacSrc,"Mac Source",carpeta)
-    graficarCantidad(ListaMacDst,"Mac Dst",carpeta)
-    graficarCantidad(ListaIPSrc,"IP Source",carpeta)
-    graficarCantidad(ListaIPDst,"IP Dst",carpeta)
+def graficarCantidades(carpeta,filtro):
+    graficarCantidad(S,"Protocolo",carpeta,filtro)
+    graficarCantidad(ListaMacSrc,"Mac Source",carpeta,filtro)
+    graficarCantidad(ListaMacDst,"Mac Dst",carpeta,filtro)
+    graficarCantidad(ListaIPSrc,"IP Source",carpeta,filtro)
+    graficarCantidad(ListaIPDst,"IP Dst",carpeta,filtro)
     return
 
-def graficarProbabilidades(carpeta):
-    graficarProbabilidad(S,"Protocolo",carpeta)
-    graficarProbabilidad(ListaMacSrc,"Mac Source",carpeta)
-    graficarProbabilidad(ListaMacDst,"Mac Dst",carpeta)
-    graficarProbabilidad(ListaIPSrc,"IP Source",carpeta)
-    graficarProbabilidad(ListaIPDst,"IP Dst",carpeta)
+def graficarProbabilidades(carpeta,filtro):
+    graficarProbabilidad(S,"Protocolo",carpeta,filtro)
+    graficarProbabilidad(ListaMacSrc,"Mac Source",carpeta,filtro)
+    graficarProbabilidad(ListaMacDst,"Mac Dst",carpeta,filtro)
+    graficarProbabilidad(ListaIPSrc,"IP Source",carpeta,filtro)
+    graficarProbabilidad(ListaIPDst,"IP Dst",carpeta,filtro)
     return
 
 
@@ -287,9 +310,9 @@ def graficarEntropias(carpeta):
     graficarEntropiaDstVsSrc(entropiaMacDst,entropiaMacSrc,"Mac Dst","Mac Source",carpeta)
     return
 
-def graficar(carpeta):
-    graficarCantidades(carpeta)
-    graficarProbabilidades(carpeta)
+def graficar(carpeta,filtro):
+    graficarCantidades(carpeta,filtro)
+    graficarProbabilidades(carpeta,filtro)
     graficarEntropias(carpeta)
     return
 # Muestra datos ether
@@ -315,6 +338,11 @@ def terminarArchivoDot(carpeta, subcarpeta):
     archivo.write("}\n")
     archivo.close()
     return
+def terminarArchivoDotFiltro(carpeta, subcarpeta,filtro):
+    archivo = open(carpeta + subcarpeta + str(filtro) + ".dot", 'a')
+    archivo.write("}\n")
+    archivo.close()
+    return
 
 def terminarArchivosDot(carpeta):
     terminarArchivoDot(carpeta,'/IPtype.dot')
@@ -322,6 +350,72 @@ def terminarArchivosDot(carpeta):
     terminarArchivoDot(carpeta,'/MACnodos.dot')
     terminarArchivoDot(carpeta,'/IPnodos.dot')
     return
+
+def terminarArchivosDotFiltro(carpeta,filtro):
+    terminarArchivoDotFiltro(carpeta,'/IPtype',filtro)
+    terminarArchivoDotFiltro(carpeta,'/MACtype',filtro)
+    terminarArchivoDotFiltro(carpeta,'/MACnodos',filtro)
+    terminarArchivoDotFiltro(carpeta,'/IPnodos',filtro)
+    return
+
+def prepararArchivoDotFiltro(carpeta, subcarpeta,filtro):
+    archivo = open(carpeta + subcarpeta + str(filtro) + ".dot", 'a')
+    archivo.write("digraph world {"+ "\n")
+    archivo.write("size=\"7,7\";\n")
+    archivo.close()
+    return
+   
+def prepararArchivosDotFiltro(carpeta,filtro):
+    prepararArchivoDotFiltro(carpeta,'/IPtype',filtro)
+    prepararArchivoDotFiltro(carpeta,'/MACtype',filtro)
+    prepararArchivoDotFiltro(carpeta,'/MACnodos',filtro)
+    prepararArchivoDotFiltro(carpeta,'/IPnodos',filtro)
+    return
+
+def megaFiltroParticular(carpeta,subcarpeta,filtro,source):
+    archivo = open(carpeta + subcarpeta + str(filtro) + ".dot", 'a')
+
+
+    occurs = Counter(source)
+    largo = len(source)
+    # filtro los que aparecen menos de filtro
+    occurs = {k: (float(v)/float(largo)) for k, v in occurs.iteritems() if v >= int(filtro)}
+    for s in occurs:
+ #       prob = float(occurs[s])/float(size)
+#        archivo.write("\t\""+ str(pkt[Ether].src) +"\""+ " -> " + "\""+str(pkt[Ether].dst) +"\""+ ";\n")
+        print s
+        aEscribir = occurs[s]
+        print aEscribir
+        archivo.write(s)
+    archivo.close()
+    return
+
+def megaFiltro(carpeta,filtro):
+    megaFiltroParticular(carpeta,'/IPtype',filtro,iptypeRepetidos)
+    megaFiltroParticular(carpeta,'/MACtype',filtro,mactypeRepetidos)
+    megaFiltroParticular(carpeta,'/MACnodos',filtro,ipnodosRepetidos)
+    megaFiltroParticular(carpeta,'/IPnodos',filtro,macnodosRepetidos)
+    return
+
+def generarDotPuntual(carpeta,filtro):
+    prepararArchivosDotFiltro(carpeta,filtro)
+    megaFiltro(carpeta,filtro)
+    terminarArchivosDotFiltro(carpeta,filtro)
+    return
+
+def generarDot(carpeta):
+    generarDotPuntual(carpeta,30)
+    generarDotPuntual(carpeta,60)
+    generarDotPuntual(carpeta,90)
+    generarDotPuntual(carpeta,120)
+    generarDotPuntual(carpeta,150)
+    generarDotPuntual(carpeta,180)
+    generarDotPuntual(carpeta,210)
+    generarDotPuntual(carpeta,230)
+    generarDotPuntual(carpeta,260)
+    generarDotPuntual(carpeta,290)
+    generarDotPuntual(carpeta,350)
+    return    
 
 # Función que sniffea red local
 def sniff_local(callback_function,bloqueado, intervalo):
@@ -415,7 +509,20 @@ if __name__ == '__main__':
         terminarArchivosDot(carpeta)
         i = i + 1
 
-        graficar(carpeta)
+        graficar(carpeta,30)
+        graficar(carpeta,60)
+        graficar(carpeta,90)
+        graficar(carpeta,120)
+        graficar(carpeta,150)
+        graficar(carpeta,180)
+        graficar(carpeta,210)
+        graficar(carpeta,230)
+        graficar(carpeta,260)
+        graficar(carpeta,290)
+        graficar(carpeta,350)
+
+
+        generarDot(carpeta)
 
         #no deberia borrar todas las variables globales aca?
         S = []
@@ -425,4 +532,10 @@ if __name__ == '__main__':
         ListaIPSrc = []
         cantidadPaquetesARP = 0
         cantidadPaquetes = 0
+
+        iptypeRepetidos = []
+        mactypeRepetidos = []
+
+        ipnodosRepetidos = []
+        macnodosRepetidos = []
 
