@@ -1,0 +1,5 @@
+digraph world {
+size="7,7";
+	"00:11:85:fe:47:cf" -> "ff:ff:ff:ff:ff:ff";
+	"00:1b:21:7f:6c:fd" -> "ff:ff:ff:ff:ff:ff";
+}

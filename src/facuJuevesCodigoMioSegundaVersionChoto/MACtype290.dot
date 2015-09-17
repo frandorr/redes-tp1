@@ -1,0 +1,9 @@
+digraph world {
+size="7,7";
+	"34:fc:ef:b2:cb:1b" -> "33:33:00:00:00:fb";
+	"00:1b:21:7f:6c:fd" -> "ff:ff:ff:ff:ff:ff";
+	"00:11:85:fe:47:cf" -> "ff:ff:ff:ff:ff:ff";
+	"a8:20:66:4e:6f:b7" -> "00:1b:21:7f:6c:fd";
+	"34:fc:ef:b2:cb:1b" -> "01:00:5e:00:00:fb";
+	"00:1b:21:7f:6c:fd" -> "a8:20:66:4e:6f:b7";
+}

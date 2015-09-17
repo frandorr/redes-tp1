@@ -404,6 +404,9 @@ def generarDotPuntual(carpeta,filtro):
     return
 
 def generarDot(carpeta):
+    generarDotPuntual(carpeta,5)
+    generarDotPuntual(carpeta,10)
+    generarDotPuntual(carpeta,20)
     generarDotPuntual(carpeta,30)
     generarDotPuntual(carpeta,60)
     generarDotPuntual(carpeta,90)
