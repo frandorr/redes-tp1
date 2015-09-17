@@ -344,10 +344,11 @@ if __name__ == '__main__':
 
 
         prepararArchivosDot(carpeta)
-
+        print "Arrancando Primer Sniff"
         sniff_local(add_symbol_to_host,False,intervalo)
-
+        print "Primer Sniff terminado, y arrancando el segundo"
         sniff_local(add_symbol_to_S,True,intervalo)
+        print "Terminado de sniffear el segundo"
         print "paquetes ARP " + str(cantidadPaquetesARP)
         print "paquetes " + str(cantidadPaquetes)
 
