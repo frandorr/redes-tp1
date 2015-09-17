@@ -69,45 +69,50 @@ def add_symbol_to_host(pkt):
 #    print "---"
 #    print pkt.src
 #    print pkt.dst
-    if "Ether" in pkt:
-#        print "es arp con filter y ether!"
-        ListaMacSrc.append(pkt[Ether].src) #mac src
-        ListaMacDst.append(pkt[Ether].dst) #mac dst
+    if "Ether" in pkt and ARP in pkt:
+        if (pkt.sprintf("%ARP.op%\n")[0:3] == "who"):
+            ListaMacSrc.append(pkt[Ether].src) #mac src
+            ListaMacDst.append(pkt[Ether].dst) #mac dst
 
-        ListaIPSrc.append(pkt[Ether].psrc) #IP src
-        ListaIPDst.append(pkt[Ether].pdst) #IP dst
+            ListaIPSrc.append(pkt[Ether].psrc) #IP src
+            ListaIPDst.append(pkt[Ether].pdst) #IP dst
 
-        archivo = open(carpeta + '/entropiaContinuaMACsrc.txt', 'a')
-        archivo.write(str(entropy(ListaMacSrc)) + "\n")
-        entropiaMacSrc.append(entropy(ListaMacSrc))
-        archivo.close()
-
-        archivo = open(carpeta + '/entropiaContinuaMACdst.txt', 'a')
-        archivo.write(str(entropy(ListaMacDst)) + "\n")
-        entropiaMacDst.append(entropy(ListaMacDst))
-        archivo.close()
-
-        archivo = open(carpeta + '/entropiaContinuaIPsrc.txt', 'a')
-        archivo.write(str(entropy(ListaIPSrc)) + "\n")
-        entropiaIPSrc.append(entropy(ListaIPSrc))
-        archivo.close()
-
-        archivo = open(carpeta + '/entropiaContinuaIPdst.txt', 'a')
-        archivo.write(str(entropy(ListaIPDst)) + "\n")
-        entropiaIPDst.append(entropy(ListaIPDst))
-        archivo.close()
-
-        if(macnodos.count(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst)) == 0):
-            archivo = open(carpeta + '/MACnodos.dot', 'a')
-            archivo.write("\t\""+str(pkt[Ether].src) +"\""+ " -> " +"\""+ str(pkt[Ether].dst) +"\""+ ";\n")
-            macnodos.append(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst))
+            archivo = open(carpeta + '/entropiaContinuaMACsrc.txt', 'a')
+            archivo.write(str(entropy(ListaMacSrc)) + "\n")
+            entropiaMacSrc.append(entropy(ListaMacSrc))
             archivo.close()
 
-        if(ipnodos.count(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst)) == 0):
-            archivo = open(carpeta + '/IPnodos.dot', 'a')
-            archivo.write("\t\""+str(pkt[Ether].psrc) +"\""+ " -> " +"\""+ str(pkt[Ether].pdst) +"\""+ ";\n")
-            ipnodos.append(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst))
+            archivo = open(carpeta + '/entropiaContinuaMACdst.txt', 'a')
+            archivo.write(str(entropy(ListaMacDst)) + "\n")
+            entropiaMacDst.append(entropy(ListaMacDst))
             archivo.close()
+
+            archivo = open(carpeta + '/entropiaContinuaIPsrc.txt', 'a')
+            archivo.write(str(entropy(ListaIPSrc)) + "\n")
+            entropiaIPSrc.append(entropy(ListaIPSrc))
+            archivo.close()
+
+            archivo = open(carpeta + '/entropiaContinuaIPdst.txt', 'a')
+            archivo.write(str(entropy(ListaIPDst)) + "\n")
+            entropiaIPDst.append(entropy(ListaIPDst))
+            archivo.close()
+
+            if(macnodos.count(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst)) == 0):
+                archivo = open(carpeta + '/MACnodos.dot', 'a')
+                archivo.write("\t\""+str(pkt[Ether].src) +"\""+ " -> " +"\""+ str(pkt[Ether].dst) +"\""+ ";\n")
+                macnodos.append(str(pkt[Ether].src) + " -> " + str(pkt[Ether].dst))
+                archivo.close()
+
+            if(ipnodos.count(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst)) == 0):
+                archivo = open(carpeta + '/IPnodos.dot', 'a')
+                archivo.write("\t\""+str(pkt[Ether].psrc) +"\""+ " -> " +"\""+ str(pkt[Ether].pdst) +"\""+ ";\n")
+                ipnodos.append(str(pkt[Ether].psrc) + " -> " + str(pkt[Ether].pdst))
+                archivo.close()
+ #           print "who-has"
+#        else:
+#            print "is-at"
+
+ 
 
 #    pkt.show()
 #    print "un arp!!!" 
@@ -247,6 +252,7 @@ def graficarEntropiaDstVsSrc(dst,src,stringdst,stringsrc,carpeta):
     #print alfak
     tam = len(dst)
     xs = np.arange(0, tam,1)
+    fig, ax = plt.subplots()
     plt.plot(xs, src,label=stringsrc)
     plt.plot(xs, dst,label=stringdst)
 
@@ -262,6 +268,7 @@ def graficarUnaEntropia(data,string,carpeta):
     #print alfak
     tam = len(data)
     xs = np.arange(0, tam,1)
+    fig, ax = plt.subplots()
     plt.plot(xs, data,label=string)
 
     plt.title("Entropia en funcion de la cantidad")
@@ -281,8 +288,8 @@ def graficarEntropias(carpeta):
     return
 
 def graficar(carpeta):
-#    graficarCantidades(carpeta)
- #   graficarProbabilidades(carpeta)
+    graficarCantidades(carpeta)
+    graficarProbabilidades(carpeta)
     graficarEntropias(carpeta)
     return
 # Muestra datos ether
@@ -338,6 +345,7 @@ if __name__ == '__main__':
 
         prepararArchivosDot(carpeta)
 
+        sniff_local(add_symbol_to_host,False,intervalo)
 
         sniff_local(add_symbol_to_S,True,intervalo)
         print "paquetes ARP " + str(cantidadPaquetesARP)
@@ -351,7 +359,6 @@ if __name__ == '__main__':
         archivo.write(str(cantidadPaquetes))
         archivo.close()
 
-        sniff_local(add_symbol_to_host,False,intervalo)
 
         print "Tipos"
         print "entropia type" + str(entropy(S))
