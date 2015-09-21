@@ -1,0 +1,172 @@
+\documentclass[a4paper]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}   % tipografia
+\usepackage{graphicx}
+\usepackage{enumerate}
+%\usepackage[]{algorithm2e}
+%\usepackage{algorithm}
+%\usepackage{algorithmic}[1]
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+%\usepackage{pifont}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{latexsym}
+\usepackage{lastpage}
+\usepackage{tikz}
+\usepackage{subcaption}
+\usepackage[colorlinks=true, linkcolor=black]{hyperref}
+%\usepackage{makeidx}
+%\usepackage{float}
+\usepackage{calc}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{amsfonts}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{makecell}
+%\usepackage{sectsty}
+%\usepackage{charter}
+%\usepackage{wrapfig}
+%\usepackage{listings}
+%\lstset{language=C}
+\definecolor{gray}{gray}{0.5}
+\definecolor{light-gray}{gray}{0.95}
+\definecolor{orange}{rgb}{1,0.5,0}
+%\usepackage{makecell}
+%\usepackage{xcolor}
+%\usepackage{colortbl}
+
+\input{codesnippet}
+\input{page.layout}
+% \setcounter{secnumdepth}{2}
+\usepackage{underscore}
+\usepackage{caratula}
+\usepackage{url}
+\usepackage{float}
+
+\newcommand{\cod}[1]{{\tt #1}}
+\newcommand{\negro}[1]{{\bf #1}}
+\newcommand{\ital}[1]{{\em #1}}
+\newcommand{\may}[1]{{\sc #1}}
+\newcommand{\tab}{\hspace*{2em}}
+
+\parskip = 5 pt
+
+\newcounter{row}
+\newcounter{col}
+
+\newcommand\setrow[3]{
+	\setcounter{col}{1}
+	\foreach \n in {#1, #2, #3} {
+	\edef\x{\value{col} - 0.5}
+	\edef\y{3.5 - \value{row}}
+	\node[anchor=center] at (\x, \y) {\n};
+	\stepcounter{col}
+	}
+	\stepcounter{row}
+}
+
+\newcommand\setrowaux[7]{
+	\setcounter{col}{1}
+	\foreach \n in {#1, #2, #3, #4, #5, #6, #7} {
+	\edef\x{\value{col} - 0.5}
+	\edef\y{7.5 - \value{row}}
+	\node[anchor=center] at (\x, \y) {\n};
+	\stepcounter{col}
+	}
+	\stepcounter{row}
+}
+
+\newcommand{\real}{\mathbb{R}}
+
+\hypersetup{
+ pdfstartview= {FitH \hypercalcbp{\paperheight-\topmargin-1in-\headheight}},
+ pdfauthor={Grupo},
+ pdfsubject={Dise\~{n}o}
+}
+
+\lstdefinestyle{customc}{
+  backgroundcolor=\color{light-gray},
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  numbers=left,
+  xleftmargin=\parindent,
+  language=C,
+  showstringspaces=false,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\bfseries\color{blue},
+  commentstyle=\itshape\color{gray},
+  identifierstyle=\color{black},
+  stringstyle=\color{orange},
+}
+
+\lstdefinestyle{customasm}{
+  backgroundcolor=\color{light-gray},
+  belowcaptionskip=1\baselineskip,
+  numbers=left,
+  xleftmargin=\parindent,
+  language=[x86masm]Assembler,
+  keywordstyle=\bfseries\color{blue},
+  basicstyle=\footnotesize\ttfamily,
+  commentstyle=\itshape\color{gray},
+}
+
+\lstset{escapechar=@}
+
+
+\begin{document}
+
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+
+\thispagestyle{empty}
+\materia{Teoría de las Comunicaciones}
+\submateria{Segundo Cuatrimestre de 2015}
+\titulo{Trabajo Práctico I}
+\subtitulo{\emph{Wiretapping}}
+%\grupo{Los heladeros de Gauss}
+\integrante{Alvarez, Mat\'ias}{090/12}{matyy.alvarez@gmail.com}
+\integrante{Dorr, Francisco}{434/09}{fran.dorr@gmail.com}
+\integrante{Litwak, Brian}{241/12}{brian.litwak@gmail.com}
+%\fecha{\date{\currentdate}}
+
+\makeatletter
+%\renewcommand{\ALG@name}{Algoritmo}
+
+\maketitle
+\newpage
+
+\thispagestyle{empty}
+\vfill
+
+\thispagestyle{empty}
+\vspace{3cm}
+\tableofcontents
+\newpage
+
+\newenvironment{myindentpar}[1]
+{\begin{list}{1}
+         {\setlength{\leftmargin}{#1}}
+         \item[]
+}
+{\end{list} }
+
+%\normalsize
+\newpage
+
+\include{1intro}
+\include{2hipotesis}
+\include{3experimentacion}
+\include{4conclusiones}
+\include{5futuro}
+\appendix
+%\include{6ApendiceImagenes}
+
+\bibliographystyle{plain}
+%\bibliography{tp2}
+
+\end{document}
+

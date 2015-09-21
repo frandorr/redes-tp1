@@ -1,0 +1,24 @@
+\section{Presentaci\'on e hip\'otesis sobre los experimentos}
+%\footnote{asd}
+
+Dividiremos la experimentaci\'on del trabajo en tres secciones, en donde cada una consistir\'a en dejar escuchando las herramientas en tres redes distintas. Entre ellas estar\'an las siguientes:
+
+\begin{itemize}
+\item[1.] Red hogare\~na: consistir\'a en una peque\~na red en donde tenemos de antemano la noci\'on de cu\'antos equipos pueden estar conectados. En este caso, al ser tres personas las que conviven, sabemos que como m\'aximo se pueden encontrar 7 equipos distintos, entre ellos 3 celulares, 2 tablets, una notebook y un televisor. La duraci\'on de la prueba ser\'a de aproximadamente 6 horas para tener mayor cantidad de informaci\'on, ya que sabemos que la cantidad de equipos que se puede conectar es baja.
+\item[2.] Red del laboratorio de computaci\'on: en este caso llevaremos una notebook a la universidad para observar qu\'e cantidad de equipos se conectan en un determinado per\'iodo de tiempo. Sabemos de antemano que entre las 17 y 22hs los laboratorios suelen estar llenos por alumnos de la carrera de computaci\'on, por lo cual cre\'imos que ser\'ia interesante observar lo que sucede en horarios en donde dichos alumnos no acaparan los laboratorios por estar en clase, sino por juntarse para resolver trabajos pr\'acticos, resolver pr\'acticas, etc. Es por esto que la medici\'on se realiz\'o entre las 13 y 14hs.
+\item[3.] --
+\end{itemize}
+
+
+Antes de realizar la experimentaci\'on plantearemos algunas hip\'otesis sobre los resultados.
+
+\begin{itemize}
+\item[$\circ$]En general creemos que la direcci\'on MAC de broadcast (FF:FF:FF:FF:FF:FF) ser\'a la m\'as pedida, ya que es la direcci\'on en donde los hosts pueden mandar mensajes a todos los dem\'as equipos. %Agregar chamuyo
+\item[$\circ$]De la misma forma, en general, creemos que habr\'a una cantidad similar de protocolos en todas las redes ya que son redes p\'ublicas a las que acceden la mayor\'ia de los equipos cotidianos como ser computadoras, celulares y tablets.
+\item[$\circ$]En la red hogare\~na creemos que habr\'a poca cantidad de env\'io de paquetes ARP \textit{who is} dado que la cantidad de dispositivos es muy acotada.
+\item[$\circ$]En la red del laboratorio creemos que esto \'ultimo ser\'a al rev\'es, es decir, habr\'a mucho env\'io de paquetes ARP \textit{who is} de distintas MAC, pues la mayor cantidad de conexiones suele provenir de celulares y \'estos tienden a bloquearse y desbloquearse cada poco tiempo (y cada vez que se realiza esa acci\'on, la gran mayor\'ia de los celulares apaga el wifi de a momentos para ahorrar bater\'ia). Por lo cual cada reconexi\'on implica una nueva tanda de mensajes ARP y es por esto que creemos que la cantidad final ser\'a muy elevada.
+\item[$\circ$] --
+\end{itemize}
+
+Las hip\'otesis generales ser\'an corroboradas en el final del informe y las que dependen de cada red, al final de cada experimentaci\'on.
+

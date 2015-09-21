@@ -1,0 +1,10 @@
+\select@language {spanish}
+\contentsline {section}{\numberline {1}Objetivo del trabajo}{3}{section.1}
+\contentsline {subsection}{\numberline {1.1}Breve introducci\IeC {\'o}n}{3}{subsection.1.1}
+\contentsline {section}{\numberline {2}Presentaci\'on e hip\'otesis sobre los experimentos}{4}{section.2}
+\contentsline {section}{\numberline {3}Experimentaci\'on}{5}{section.3}
+\contentsline {subsection}{\numberline {3.1}Red hogare\~na}{5}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Red del laboratorio de computaci\'on}{11}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Red ---}{17}{subsection.3.3}
+\contentsline {section}{\numberline {4}Conclusiones}{18}{section.4}
+\contentsline {section}{\numberline {5}Trabajo futuro}{19}{section.5}

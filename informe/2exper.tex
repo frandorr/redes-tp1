@@ -1,0 +1,22 @@
+\section{El problema}
+En este trabajo práctico se utilizarán dos modelos de redes neuronales artificiales 
+(ambos basados en variantes del aprendizaje hebbiano no supervisado). Ambos se utilizarán 
+sobre el mismo conjunto de datos, y ambos con el objetivo de clasificar los datos. 
+
+\subsection{Los datos del problema}
+Los datos consisten en descripciones de compañías Brasileñas, estas clasificadas en 9 categorías, 
+según la actividad principal de la compañía. Cada una de las descripciones ha sido preprocesada, 
+obteniendo una representación del estilo Bag-Of-Words. De modo que cada descripción ha sido 
+transformada en un vector, donde el valor de una descripción en la $i$-ésima coordenada indica la cantidad de 
+veces que aparece la $i$-ésima palabra en dicha descripción. Las palabras más comunes como conectores, 
+artículos y preposiciones se han omitido en este preprocesamiento, por el poco aporte que hacen 
+a la descripción en sí. 
+
+De este modo, disponemos de 900 entradas, cada una con más de 856 atributos (coordenadas, es decir, 
+las palabras que fueron tomadas en cuenta en el preprocesamiento) distribuidas uniformemente en las 9 categorías. 
+Cada entrada está etiquetada con la categoría a la que pertenece. 
+
+A continuación presentaremos el trabajo realizado con los dos modelos de 
+redes neuronales artificiales que se usaron. El primero, un modelo de análisis de 
+componentes principales (reducción de dimensiones) usando las reglas de Oja y Sanger. El segundo, 
+un modelo de mapeo de características auto-organizado. 

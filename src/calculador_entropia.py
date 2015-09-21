@@ -62,7 +62,7 @@ def sniff_local(callback_function, intervalo=5, filtro=""):
 if __name__ == '__main__':
     graficador = Graficador()
     # Lee csv con datos del experimento
-    with open('../results/facu_src_entropy.txt') as csvfile:
+    with open('../results/areatres_src_entropy.txt') as csvfile:
         reader = csv.DictReader(csvfile)
         MACsrc = []
         ip_src = []
