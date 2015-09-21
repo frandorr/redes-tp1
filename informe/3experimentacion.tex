@@ -53,7 +53,7 @@ Veamos a continuaci\'on lo que sucedi\'o con los env\'ios de paquetes IP desde y
 \begin{figure}[H]
 
 \begin{subfigure}{0.6\textwidth}
-\includegraphics[width=0.9\linewidth, height=6cm]{imagenes/exp1/4cantidadIPSource} 
+\includegraphics[width=0.9\linewidth, height=6cm]{imagenes/exp1/4cantidadIPSource}
 \caption{}
 \end{subfigure}
 \begin{subfigure}{0.6\textwidth}
@@ -72,7 +72,7 @@ Visto de otro modo, las probabilidades de estos mensajes resultaron las siguient
 \begin{figure}[H]
 
 \begin{subfigure}{0.6\textwidth}
-\includegraphics[width=0.9\linewidth, height=6cm]{imagenes/exp1/6probabilidadIPSource} 
+\includegraphics[width=0.9\linewidth, height=6cm]{imagenes/exp1/6probabilidadIPSource}
 \caption{}
 \end{subfigure}
 \begin{subfigure}{0.6\textwidth}
@@ -113,7 +113,7 @@ Por \'ultimo veamos c\'omo qued\'o el env\'io distribu\'ido por direcciones MAC.
 \begin{figure}[H]
 
 \begin{subfigure}{0.6\textwidth}
-\includegraphics[width=0.9\linewidth, height=6cm]{imagenes/exp1/9cantidadMacSource} 
+\includegraphics[width=0.9\linewidth, height=6cm]{imagenes/exp1/9cantidadMacSource}
 \caption{}
 \end{subfigure}
 \begin{subfigure}{0.6\textwidth}
@@ -129,7 +129,7 @@ En este gr\'afico aparecen menos hosts que en el caso de paquetes IP. Esto, cree
 
 \begin{figure}[H]
 \begin{subfigure}{0.6\textwidth}
-\includegraphics[width=0.9\linewidth, height=6cm]{imagenes/exp1/11probabilidadMacSource} 
+\includegraphics[width=0.9\linewidth, height=6cm]{imagenes/exp1/11probabilidadMacSource}
 \caption{}
 \end{subfigure}
 \begin{subfigure}{0.6\textwidth}
@@ -226,7 +226,7 @@ Visto de otro modo, las probabilidades de estos mensajes resultaron las siguient
 \begin{figure}[H]
 
 \begin{subfigure}{0.6\textwidth}
-\includegraphics[width=0.9\linewidth, height=6cm]{imagenes/exp2/6v2ProbabilidadesIPSource} 
+\includegraphics[width=0.9\linewidth, height=6cm]{imagenes/exp2/6v2ProbabilidadesIPSource}
 \caption{}
 \end{subfigure}
 \begin{subfigure}{0.6\textwidth}
@@ -284,6 +284,106 @@ Para concluir esta segunda parte, podemos rescatar varias ideas:
 
 \newpage
 
-\subsection{Red ---}
+\subsection{Red Coworking}
+
+El tercer experimento se realiz\'o en un coworking durante un taller de inform\'atica
+a aproximadamente 15 adolescentes. La mayor\'ia de ellos con una computadora conectada a la red y con celulares.
+Tambi\'en hubo otros dispositivos conectados a la red, como raspberry pi.\\
+
+Los an\'alisis se realizaron \'unicamente en el protocolo 2048 (los otros se descartaron por no ser significativos),
+ sobre los paquetes ARP, que resultaron ser un 4,39732\% del total (8472 de 192663 paquetes).
+
+Para los gr\'aficos IP tomamos la decisi\'on de tomar s\'olo las direcciones que aparecen m\'as de 50 veces, para
+evitar poner informaci\'on que complique la lectura de los mismos.
+
+Veamos que sucedi\'o con los envios de paquetes IP.
+
+Veamos qu\'e sucedi\'o con la entrop\'ia.
 
 
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.7\linewidth]{imagenes/exp3/CantIpSource.png}
+\caption{Mensajes con IP origen en la red}
+\label{exp3grafico1}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.7\linewidth]{imagenes/exp3/CantIpDest.png}
+\caption{Mensajes con IP destino en la red}
+\label{exp3grafico2}
+\end{figure}
+
+
+En esta figura podemos ver que la mayor cantidad del tr\'afico de env\'io
+se lo lleva la direcci\'on 172.17.31.1, siguiendo de cerca con una
+diferencia de unos 500 paquetes, la direcci\'on 172.17.31.142. \\
+Es interesante notar la gran cantidad de direcciones 0.0.0.0. Investigando sobre
+el tema, encontramos que la causa puede ser que cuando un nuevo disposito se une
+a la interfaz Ethernet, al no estar configurado con una direcci\'on IP se realiza la configuraci\'on
+con source 0.0.0.0 y destino 0.0.0.0. \\
+El resto de las direcciones realizaron pocos envios. Por lo general,
+el uso que se le da a las computadoras en el taller suele ser pasivo. \\
+
+Si observamos la cantidad de paquetes recibidos por las IP Destino, podemos
+ver que tenemos nuevamente dos picos: 0.0.0.0 y 172.17.31.151. Cada direcci\'on
+0.0.0.0 tiene su correlato en el IP fuente 0.0.0.0. \\
+El resto de las direcciones est\'a m\'as balanceado que en los envios de
+paquetes.
+
+\newpage
+Visto de otro modo, las probabilidades de estos mensajes resultaron las siguientes.
+
+\begin{figure}[H]
+
+\begin{subfigure}{0.6\textwidth}
+\includegraphics[width=0.9\linewidth, height=6cm]{imagenes/exp3/ProbIpSource.png}
+\caption{}
+\end{subfigure}
+\begin{subfigure}{0.6\textwidth}
+\includegraphics[width=0.9\linewidth, height=6cm]{imagenes/exp3/ProbIpDest.png}
+\caption{}
+\end{subfigure}
+
+\caption{Probabilidades correspondientes a los paquetes IP origen y destino}
+\label{exp3grafico3}
+\end{figure}
+
+Estos gr\'aficos de probabilidad, nos van a ayudar a comprender el desarrollo de la
+entrop\'ia a lo largo del envio de paquetes.
+
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.7\linewidth]{imagenes/exp3/EntropiaIp}
+\caption{Entrop\'ia a medida que aumenta la cantidad de s\'imbolos emitidos por la fuente}
+\label{exp3grafico4}
+\end{figure}
+
+Observando los gr\'aficos de entrop\'ia y probabildad encontramos la explicaci\'on de
+por qu\'e la entrop\'ia de IP source se mantiene relativamente estable a diferencia
+de la entrop\'ia de IP Destino que se mantiene en crecimiento. \\
+
+Recordemos que la entrop\'ia es m\'axima si todos los s\'imbolos de la fuente son equiprobables.
+En el caso de IP Destino encontramos mayor uniformidad en la cantidad de paquetes
+recibidos por direcci\'on, por eso vemos que a medida que se reciben paquetes la entrop\'ia
+crece. \\
+
+En el caso de IP Source, al tener menos direcciones involucradas con dos predominantes,
+la entrop\'ia se mantiene estable.
+
+Por \'ultimo, si quiere verse la relación entre los IP source e IP destino en
+forma de grafo se puede encontrar en la carpeta de imagenes del experimento un archivo png
+muy grande para poner en el informe.
+
+\
+
+Para concluir esta tercera parte, podemos rescatar varias ideas:
+
+\begin{itemize}
+\item[$\circ$] Al tener dispositivos no tradicionales intentando conectarse a la red,
+tendremos gran cantidad de direcciones 0.0.0.0.
+\item[$\circ$] Existe una mayor uniformidad en las direcciones receptoras de paquetes, que en las que envían.
+En este último caso siempre son unas pocas que hacen envios de todos los paquetes.
+\end{itemize}

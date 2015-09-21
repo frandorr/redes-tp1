@@ -83,6 +83,7 @@ if __name__ == '__main__':
             cant_pkt_total.append(row['cant_pkt_total'])
 
     # Realiza los gráficos
-    graficador.graficarEntropias(entropia_src, entropia_dst, cant_pkt_arp)
-    graficador.graficarCant(ip_src)
-    graficador.graficarProb(ip_src)
+    graficador.generar_dot(ip_src, ip_dst)
+    # graficador.graficarEntropias(MACsrc, MACsrc, cant_pkt_arp)
+    # graficador.graficarCant(MACsrc)
+    # graficador.graficarProb(MACsrc)
