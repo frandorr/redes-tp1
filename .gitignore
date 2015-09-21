@@ -2,3 +2,7 @@
 *.log
 *.db
 *.pyc
+*.pdf
+*.out
+*.gz
+*.toc
