@@ -1,5 +1,5 @@
 digraph world {
-size="7,7";
+size="12";
 	"38:60:77:2f:f9:6e" -> "ff:ff:ff:ff:ff:ff";
 	"38:60:77:2f:f8:e8" -> "ff:ff:ff:ff:ff:ff";
 	"34:fc:ef:b2:cb:1b" -> "33:33:00:00:00:fb";

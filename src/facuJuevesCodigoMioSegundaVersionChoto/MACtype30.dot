@@ -1,7 +1,4 @@
-digraph world {
-size="7,7";
-digraph world {
-size="7,7";
+size="12";
 	"a4:70:d6:08:42:9e" -> "ff:ff:ff:ff:ff:ff";
 	"68:a8:6d:78:d0:be" -> "ff:ff:ff:ff:ff:ff";
 	"38:60:77:2f:f9:6e" -> "ff:ff:ff:ff:ff:ff";

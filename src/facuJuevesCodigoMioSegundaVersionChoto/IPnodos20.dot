@@ -1,4 +1,4 @@
-digraph world {
+digraph G {
 size="7,7";
 	"70:18:8b:c3:a4:fa" -> "ff:ff:ff:ff:ff:ff";
 	"70:14:a6:ba:99:10" -> "ff:ff:ff:ff:ff:ff";
@@ -44,4 +44,3 @@ size="7,7";
 	"e0:69:95:e4:c1:34" -> "ff:ff:ff:ff:ff:ff";
 	"e0:75:7d:8d:ae:54" -> "ff:ff:ff:ff:ff:ff";
 	"7c:c5:37:44:eb:aa" -> "ff:ff:ff:ff:ff:ff";
-}
