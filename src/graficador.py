@@ -1,17 +1,10 @@
 import numpy as np
+import math
 import matplotlib.pyplot as plt
 from collections import Counter
-
+import operator
 class Graficador:
     """docstring for graficador"""
-
-    def generar_dot(self, datosX, datosY):
-        relaciones = set(zip(datosX, datosY))
-        print "digraph G{"
-        for r in relaciones:
-            print '"'+ r[0] + '"' + "->" + '"' + r[1] + '"' + ";"
-        print "}"
-
 
     def graficar(self, datosX, datosY, labelX, labelY, labels, title):
         #print alfak
@@ -25,18 +18,20 @@ class Graficador:
         fig1 = plt.gcf()
         plt.show()
 
-    def graficar_histograma(self, xticks,datosY, labelX, labelY, labels, title):
+    def graficar_histograma(self, xticks,datosY, labelX, labelY, labels, title, entropia=0):
         N = len(xticks)
+        unArr = (N+1)*[entropia]
         ind = np.arange(N)
         width = 0.25
         fig, ax = plt.subplots()
         rect1 = ax.bar(ind, datosY, color='r')
+        ax.plot(unArr, "k--")
         ax.set_ylabel(labelY)
         ax.set_xlabel(labelX)
         ax.set_title(title)
         ax.set_xticks(ind+width)
         xtickNames = ax.set_xticklabels(labels)
-
+        plt.yscale('log')
         plt.setp(xtickNames, rotation=45, fontsize=10)
         plt.show()
         # plt.savefig(labelX+labelY+.png")
@@ -46,27 +41,60 @@ class Graficador:
         occurs = Counter(source)
         largo = len(source)
         # filtro los que aparecen menos de 30
-        occurs = {k: (float(v)/float(largo)) for k, v in occurs.iteritems() if v >= 50}
+        occurs = {k: (float(v)/float(largo)) for k, v in occurs.items() if v >= 50}
         probs = []
         xlabels = []
         for i in occurs:
             probs.append(occurs[i])
         for ip in occurs:
             xlabels.append(ip)
-        self.graficar_histograma(occurs,probs,"MAC Source", "Probabilidad",xlabels, "Probabilidades por MAC Source")
+        occurs = sorted(occurs.items(), key=operator.itemgetter(1))
+        probs = sorted(probs)
+        self.graficar_histograma(occurs,probs,"IP Source", "Probabilidad",xlabels, "Probabilidades por IP Source")
 
     def graficarCant(self, source):
         """Graficar histogramas cantidades"""
         occurs = Counter(source)
         # filtro los que aparecen menos de 30
-        occurs = {k: v for k, v in occurs.iteritems() if v >= 50}
+        occurs = {k: v for k, v in occurs.items() if v >= 50}
         cantidades = []
         for i in occurs:
             cantidades.append(occurs[i])
         xlabels = []
         for ip in occurs:
             xlabels.append(ip)
+        occurs = sorted(occurs.items(), key=operator.itemgetter(1))
+        cantidades = sorted(cantidades)
         self.graficar_histograma(occurs,cantidades,"MAC Source", "Cantidad",xlabels, "Cantidad por MAC Source")
+
+
+    def graficarInformacion(self, source):
+        """Graficar histogramas cantidades"""
+        occurs = Counter(source)
+        print(source)
+        # filtro los que aparecen menos de 30
+        occurs = {k: v for k, v in occurs.items() if v>50}
+        largo = sum(occurs.values())
+        occurs = {k: (float(v)/float(largo)) for k, v in occurs.items()}
+
+        infos = []
+        occurs = sorted(occurs.items(), key=operator.itemgetter(1))
+        print(occurs)
+        xlabels = []
+        entropia = 0
+        total = 0
+        for (i,j) in occurs:
+            prob = j
+            total+=prob
+            info = prob*math.log(1/prob)/math.log(2)
+            print("Info:", info)
+            entropia += info
+            infos.append(info)
+            xlabels.append(i)
+        print("Entropia: ",entropia)
+        print("Total: ", total)
+        self.graficar_histograma(occurs,infos,"IP Source", "Información",xlabels, "Información por IP Source", entropia)
+
 
     def graficarEntropias(self, entropia_src,entropia_dst,cant_pkt_arp):
         """ Grafico entropias vs cant_pkt_arp """
