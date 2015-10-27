@@ -73,12 +73,12 @@ class Graficador:
         occurs = Counter(source)
         print(source)
         # filtro los que aparecen menos de 30
-        occurs = {k: v for k, v in occurs.items() if v>50}
+        occurs = {k: v for k, v in occurs.items()}
         largo = sum(occurs.values())
         occurs = {k: (float(v)/float(largo)) for k, v in occurs.items()}
 
         infos = []
-        occurs = sorted(occurs.items(), key=operator.itemgetter(1))
+        occurs = sorted(occurs.items(), key=operator.itemgetter(1))[::-1]
         print(occurs)
         xlabels = []
         entropia = 0
@@ -89,10 +89,12 @@ class Graficador:
             info = prob*math.log(1/prob)/math.log(2)
             print("Info:", info)
             entropia += info
-            infos.append(info)
+            infos.append(math.log(1/prob)/math.log(2))
             xlabels.append(i)
         print("Entropia: ",entropia)
         print("Total: ", total)
+        print(occurs)
+        print(infos[::-1])
         self.graficar_histograma(occurs,infos,"IP Source", "Información",xlabels, "Información por IP Source", entropia)
 
 
